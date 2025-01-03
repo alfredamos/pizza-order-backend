@@ -13,31 +13,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model CartItem {
-  id       String   @id @default(uuid())
-  name     String   @db.VarChar(255)
-  price    Float  
+  id       String  @id @default(uuid())
+  name     String  @db.VarChar(255)
+  price    Float
   quantity Int
-  pizzaId  String?  @db.VarChar(255)
-  orderId  String?  @db.VarChar(255)
-  pizza    Pizza?   @relation(fields: [pizzaId], references: [id])
-  order    Order?   @relation(fields: [orderId], references: [id])
+  pizzaId  String? @db.VarChar(255)
+  orderId  String? @db.VarChar(255)
+  pizza    Pizza?  @relation(fields: [pizzaId], references: [id])
+  order    Order?  @relation(fields: [orderId], references: [id])
 
   @@map("cartItems")
 }
 
 model User {
-  id        String    @id @default(uuid()) 
-  address   String    @db.VarChar(255)
-  name      String    @db.VarChar(255)
-  email     String    @unique @db.VarChar(255)
-  phone     String    @db.VarChar(255)
-  gender    Gender    @default(Male)
-  password  String    @db.VarChar(255)
-  role      Role      @default(User)
-  orders    Order[]
-  pizzas    Pizza[]
+  id       String  @id @default(uuid())
+  address  String  @db.VarChar(255)
+  name     String  @db.VarChar(255)
+  email    String  @unique @db.VarChar(255)
+  phone    String  @db.VarChar(255)
+  gender   Gender  @default(Male)
+  password String  @db.VarChar(255)
+  role     Role    @default(User)
+  orders   Order[]
+  pizzas   Pizza[]
 
   @@map("users")
 }
@@ -90,4 +89,3 @@ enum Gender {
   Female
   Male
 }
-
