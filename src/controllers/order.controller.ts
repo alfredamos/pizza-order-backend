@@ -4,7 +4,6 @@ import { StatusCodes } from "http-status-codes";
 
 import { orderDb } from "../db/order.db";
 import { OrderProduct } from "../models/orderProduct.model";
-import prisma from "../db/prisma.db";
 
 export class OrderController {
   static createOrder = async (req: Request, res: Response) => {
@@ -16,39 +15,6 @@ export class OrderController {
 
     //----> Send back the response.
     res.status(StatusCodes.CREATED).json(createdOrder);
-  };
-
-  static deleteAllCartItemByOrderId = async (req: Request, res: Response) => {
-    //----> Get the order id from params.
-    const { orderId } = req.params;
-
-    //----> Delete all cart items by order id.
-    await orderDb.deleteAllCartItemByOrderId(orderId);
-
-    //----> Send back the response.
-    res.status(StatusCodes.OK).json({ message: "Order successfully deleted!" });
-  };
-
-  static deleteOneCartItemByOrderId = async (req: Request, res: Response) => {
-    //----> Get the order id and cartItem id from params.
-    const { cartItemId, orderId } = req.params;
-    //----> Delete one cart item by order id.
-
-    const { filteredCartItems, deletedOrder } =
-      await orderDb.deleteOneCartItemByOrderId(cartItemId, orderId);
-
-    //----> Check to see if there is any cart-item left.
-    if (filteredCartItems.length === 0) {
-      //----> Delete the order.
-      console.log("No more cart-item to delete");
-      await prisma.order.delete({ where: { id: orderId } });
-      res
-        .status(StatusCodes.OK)
-        .json({ message: "Order is successfully deleted!" });
-      return {} as Order;
-    }
-    //----> Send back the response.
-    res.status(StatusCodes.OK).json(deletedOrder);
   };
 
   static deleteOrderById = async (req: Request, res: Response) => {
@@ -71,21 +37,6 @@ export class OrderController {
       message:
         "All Orders associated with this customer have been deleted successfully!",
     });
-  };
-
-  static editAllCartItemsByOrderId = async (req: Request, res: Response) => {
-    //----> get order id from params.
-    const { orderId } = req.params;
-    //----> Destructure cart items and order from order product.
-    const { cartItems, order } = req.body as OrderProduct;
-    //----> Edit all the cart items by order id.
-    const { editedOrder, updatedCartItems } =
-      await orderDb.editAllCartItemsByOrderId(orderId, cartItems, order);
-
-    //----> Send back the response.
-    res
-      .status(StatusCodes.OK)
-      .json({ ...editedOrder, orders: updatedCartItems });
   };
 
   static editOrderById = async (req: Request, res: Response) => {
