@@ -1,6 +1,8 @@
 import { Gender } from "@prisma/client";
 
-export class SignupModel{
+export class SignupModel {
+  address: string;
+  image: string;
   name: string;
   email: string;
   phone: string;

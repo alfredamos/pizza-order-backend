@@ -29,7 +29,7 @@ export class AuthDb {
 
     //----> Check that the old password is correct.
     const isMatch = await this.comparePassword(oldPassword, user);
-     if(!isMatch){
+    if (!isMatch) {
       throw catchError(StatusCodes.UNAUTHORIZED, "Invalid credentials ");
     }
 
@@ -56,7 +56,6 @@ export class AuthDb {
 
     return rest;
   }
-
 
   async editProfile(editProfileModel: EditProfileModel) {
     //----> Destructure the payload.
@@ -124,7 +123,6 @@ export class AuthDb {
     return restOfData;
   }
 
-
   async updateUserRole(userInfo: UserInfoModel, email: string, role: Role) {
     //----> Check for admin rights.
     const isAdmin = userInfo?.role;
@@ -157,19 +155,16 @@ export class AuthDb {
     return userUpdated;
   }
 
-
   private matchPassword(newPassword: string, oldPassword: string) {
     const isMatch = newPassword.normalize() === oldPassword.normalize();
 
     return isMatch;
   }
 
-
-  private async getUserById(id: string, includeAddresses: boolean = false) {
+  private async getUserById(id: string,) {
     //----> Get the user.
     const user = await prisma.user.findUnique({
       where: { id },
-      include: { addresses: includeAddresses },
     });
     //----> Check for existence of user.
     if (!user) {
@@ -178,7 +173,6 @@ export class AuthDb {
 
     return user;
   }
-
 
   private async getUserByEmail(email: string) {
     //----> Get user from database.
@@ -192,7 +186,6 @@ export class AuthDb {
     return user;
   }
 
-
   private async comparePassword(oldPassword: string, user: User) {
     //----> Compare the new password with old password.
     const isMatch = await bcrypt.compare(oldPassword, user.password);
@@ -205,12 +198,10 @@ export class AuthDb {
     return isMatch;
   }
 
-
   private async passwordHarsher(newPassword: string) {
     //----> Hash the new password.
     return await bcrypt.hash(newPassword, 12);
   }
-
 
   private async signupUtil(
     confirmPassword: string,
@@ -230,7 +221,6 @@ export class AuthDb {
       throw catchError(StatusCodes.BAD_REQUEST, "User already exists!");
     }
   }
-
 
   private getJsonToken(id: string, name: string, role: Role) {
     const token = jwt.sign(

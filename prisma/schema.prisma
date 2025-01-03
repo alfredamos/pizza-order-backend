@@ -16,6 +16,7 @@ datasource db {
 model CartItem {
   id       String  @id @default(uuid())
   name     String  @db.VarChar(255)
+  image    String  @db.VarChar(255)
   price    Float
   quantity Int
   pizzaId  String? @db.VarChar(255)
@@ -33,6 +34,7 @@ model User {
   email    String  @unique @db.VarChar(255)
   phone    String  @db.VarChar(255)
   gender   Gender  @default(Male)
+  image    String  @db.VarChar(255)
   password String  @db.VarChar(255)
   role     Role    @default(User)
   orders   Order[]
