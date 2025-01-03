@@ -1,4 +1,4 @@
-import { CartItem, Order } from "@prisma/client";
+import { Order } from "@prisma/client";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -6,7 +6,7 @@ import { orderDb } from "../db/order.db";
 import { OrderProduct } from "../models/orderProduct.model";
 import prisma from "../db/prisma.db";
 
-export class OrderController {  
+export class OrderController {
   static createOrder = async (req: Request, res: Response) => {
     //----> Get the order info from the request body.
     const { cartItems, order } = req.body as OrderProduct;
@@ -86,22 +86,6 @@ export class OrderController {
     res
       .status(StatusCodes.OK)
       .json({ ...editedOrder, orders: updatedCartItems });
-  };
-
-  static editOneCartItemByOrderId = async (req: Request, res: Response) => {
-    //----> Retrieve the orderId and orderId from request params.
-    const { cartItemId, orderId } = req.params;
-    //----> Retrieve cartItems and order.
-    const { cartItems } = req.body as OrderProduct;
-    //----> Edit one cart item by order id.
-    const editedOrder = await orderDb.editOneCartItemByOrderId(
-      cartItemId,
-      orderId,
-      cartItems
-    );
-
-    //----> Send back the response.
-    res.status(StatusCodes.OK).json(editedOrder);
   };
 
   static editOrderById = async (req: Request, res: Response) => {

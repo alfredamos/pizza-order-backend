@@ -139,39 +139,6 @@ export class OrderDb {
     return {editedOrder, updatedCartItems}
   };
 
-  async editOneCartItemByOrderId(cartItemId: string, orderId: string, cartItems: CartItem[]){   
-    //----> Check for the existence of order in the db.
-    const order = await this.getOrderById(orderId);
-    
-    //----> Massage cartItems.
-    const cartItemsMod = this.cartItemsModInput(cartItems);
-    //----> Filter out the cart-item to edit.
-    const cartItemToEdit = this.findCartItem(cartItemsMod, cartItemId);
-
-    //----> Adjust the total-cost and total-quantity on order.
-    const modifiedOrder = this.adjustTotalPriceAndTotalQuantity(
-      order,
-      cartItemsMod
-    );
-    //----> Store the edited order info in the database.
-    const editedOrder = await prisma.order.update({
-      where: { id: orderId },
-      data: {
-        ...modifiedOrder,
-        cartItems: {
-          update: {
-            where: { id: cartItemId, orderId },
-            data: { ...cartItemToEdit },
-          },
-        },
-      },
-      include: {
-        cartItems: true,
-      },
-    });
-
-    return editedOrder;
-  };
 
   async editOrder(id: string, orderToEdit: Order){
     //----> Check for the existence of order in the db.
@@ -243,6 +210,7 @@ export class OrderDb {
     //----> Get the order.
     const order = (await this.getOrderById(orderId));
     //----> Update the shipping information.
+    order
     const shippedOrder = this.shippingInfo(order);
     console.log({ shippedOrder });
     //----> Update the order in the database.

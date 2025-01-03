@@ -51,6 +51,7 @@ model Order {
   totalQuantity Int
   isShipped     Boolean    @default(false)
   isDelivered   Boolean    @default(false)
+  isPending     Boolean    @default(true)
   totalPrice    Float
   cartItems     CartItem[]
   user          User       @relation(fields: [userId], references: [id])
