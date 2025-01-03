@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ChangePasswordModel } from "../models/changePassword.model";
-import { authDb, AuthDb } from "../db/auth.db";
+import { authDb } from "../db/auth.db";
 import { StatusCodes } from "http-status-codes";
 import { EditProfileModel } from "../models/editProfile.model";
 import { LoginModel } from "../models/login.model";
@@ -8,7 +8,6 @@ import { SignupModel } from "../models/signup.model";
 import { AuthUserModel } from "../models/authUser.model";
 import { UserInfoModel } from "../models/userInfo.model";
 import { UserRoleChangeModel } from "../models/userRoleChange.model";
-import { UserPayload } from "../models/userPayload.model";
 
 export class AuthController {
   static changePassword = async (req: Request, res: Response) => {
@@ -20,55 +19,6 @@ export class AuthController {
 
     //----> Send back the response.
     res.status(StatusCodes.OK).json(userDetail);
-  };
-
-  static deleteAllUserAddressesByUserId = async (
-    req: Request,
-    res: Response
-  ) => {
-    //----> Get the userId from the request params.
-    const { userId } = req.params;
-
-    //----> Delete the user and all the addresses.
-    await authDb.deleteAllUserAddressesByUserId(userId);
-    //----> Send back the response.
-    res.status(StatusCodes.OK).json({ message: "user successfully deleted!" });
-  };
-
-  static deleteOneAddressByUserId = async (req: Request, res: Response) => {
-    const { addressId, userId } = req.params;
-    //----> delete one address from database.
-    const userWithOneAddressDeleted = await authDb.deleteOneAddressByUserId(
-      addressId,
-      userId
-    );
-    //----> Send back the response.
-    res.status(StatusCodes.OK).json(userWithOneAddressDeleted);
-  };
-
-  static editAllAddressesByUserId = async (req: Request, res: Response) => {
-    const { userId } = req.params; //----> Get the user id from params.
-    const userPayload = req.body as UserPayload; //----> Get the user payload
-
-    //----> edit all addresses by user id
-    const {editedUser, updatedAddresses} = await authDb.editAllAddressesByUserId(userId, userPayload)
-    
-    //----> Send back the response.
-    res
-      .status(StatusCodes.OK)
-      .json({ ...editedUser, address: updatedAddresses });
-  };
-
-  static editOneAddressByUserId = async (req: Request, res: Response) => {
-    //----> Retrieve the addressId and userId from request params.
-    const { addressId, userId } = req.params;
-    const userPayload = req.body as UserPayload;
-
-    //----> Edit one address by userId and addressId.
-    const editedUser = await authDb.editOneAddressByUserId(addressId, userId, userPayload)
-   
-    //----> Send back the response.
-    res.status(StatusCodes.OK).json(editedUser);
   };
 
   static editProfile = async (req: Request, res: Response) => {
@@ -99,19 +49,6 @@ export class AuthController {
 
     //----> Store the new user credentials in the database.
     const userCredentials = await authDb.signup(newUserCredentials);
-
-    //----> Send back the response.
-    res.status(StatusCodes.OK).json(userCredentials);
-  };
-
-  static signupWithMultipleAddress = async (req: Request, res: Response) => {
-    //----> Get the user credentials
-    const userPayload = req.body as UserPayload;
-
-    //----> Store the new user credentials in the database.
-    const userCredentials = await authDb.signupWithMultipleAddresses(
-      userPayload
-    );
 
     //----> Send back the response.
     res.status(StatusCodes.OK).json(userCredentials);
