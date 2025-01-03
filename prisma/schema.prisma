@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model CartItem {
+  id       String   @id @default(uuid())
+  name     String   @db.VarChar(255)
+  price    Float  
+  quantity Int
+  pizzaId  String?  @db.VarChar(255)
+  orderId  String?  @db.VarChar(255)
+  pizza    Pizza?   @relation(fields: [pizzaId], references: [id])
+  order    Order?   @relation(fields: [orderId], references: [id])
+
+  @@map("cartItems")
+}
+
+model User {
+  id        String    @id @default(uuid()) 
+  address   String    @db.VarChar(255)
+  name      String    @db.VarChar(255)
+  email     String    @unique @db.VarChar(255)
+  phone     String    @db.VarChar(255)
+  gender    Gender    @default(Male)
+  password  String    @db.VarChar(255)
+  role      Role      @default(User)
+  orders    Order[]
+  pizzas    Pizza[]
+
+  @@map("users")
+}
+
+model Order {
+  id            String     @id @default(uuid())
+  orderDate     DateTime
+  shippingDate  DateTime?
+  deliveryDate  DateTime?
+  totalQuantity Int
+  isShipped     Boolean    @default(false)
+  isDelivered   Boolean    @default(false)
+  totalPrice    Float
+  cartItems     CartItem[]
+  user          User       @relation(fields: [userId], references: [id])
+  userId        String
+  status        Status     @default(Pending)
+
+  @@map("orders")
+}
+
+model Pizza {
+  id          String     @id @default(uuid())
+  name        String     @db.VarChar(255)
+  topping     String     @db.VarChar(255)
+  price       Float
+  quantity    Int        @default(10)
+  image       String     @db.VarChar(255)
+  description String     @db.VarChar(255)
+  cartItems   CartItem[]
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String
+
+  @@map("pizzas")
+}
+
+enum Role {
+  User
+  Staff
+  Admin
+}
+
+enum Status {
+  Delivered
+  Pending
+  Shipped
+}
+
+enum Gender {
+  Female
+  Male
+}
+

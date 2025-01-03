@@ -1,0 +1,31 @@
+{
+  "workbench.colorTheme": "Palenight (Mild Contrast)",
+  "workbench.iconTheme": "vscode-great-icons",
+  "terminal.integrated.ignoreProcessNames": ["starship", "oh-my-posh"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.fontFamily": "Victor Mono Medium, 'Fira Code', monospace",
+  //"editor.fontLigatures": true,
+  "editor.fontLigatures": "'ss01'",
+  "terminal.integrated.fontFamily": "Victor Mono, 'Fira Code', monospace",
+  "terminal.integrated.fontWeight": "bold",
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "files.autoSave": "afterDelay",
+  "editor.fontSize": 18,
+  "window.zoomLevel": 1,
+  "prettier.withNodeModules": true,
+  "prettier.vueIndentScriptAndStyle": true,
+  "reactSnippets.settings.importReactOnTop": false,
+  "explorer.compactFolders": false,
+  "dotnetAcquisitionExtension.enableTelemetry": false,
+  "settingsSync.ignoredExtensions": [],
+  "editor.fontVariations": false,
+  "launch": {
+    "configurations": [],
+    "compounds": []
+  },
+  "tabnine.experimentalAutoImports": true,
+  "workbench.settings.applyToAllProfiles": ["editor.fontFamily"],
+  "window.dialogStyle": "custom"
+}
