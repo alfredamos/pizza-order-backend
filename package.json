@@ -21,6 +21,7 @@
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
     "rimraf": "^6.0.1",
+    "stripe": "^17.5.0",
     "uuid-tool": "^2.0.3",
     "zod": "^3.23.8",
     "zod-validation-error": "^3.3.1"
@@ -31,6 +32,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^22.5.1",
+    "@types/stripe": "^8.0.416",
     "nodemon": "^3.1.4",
     "prisma": "^5.19.0",
     "ts-node": "^10.9.2",

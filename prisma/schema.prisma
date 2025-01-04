@@ -48,6 +48,7 @@ model Order {
   orderDate     DateTime
   shippingDate  DateTime?
   deliveryDate  DateTime?
+  paymentId     String?    @db.VarChar(255)
   totalQuantity Int
   isShipped     Boolean    @default(false)
   isDelivered   Boolean    @default(false)

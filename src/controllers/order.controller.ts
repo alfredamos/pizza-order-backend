@@ -4,14 +4,15 @@ import { StatusCodes } from "http-status-codes";
 
 import { orderDb } from "../db/order.db";
 import { OrderProduct } from "../models/orderProduct.model";
+import { OrderPayload } from "../models/orderPayload.model";
 
 export class OrderController {
   static createOrder = async (req: Request, res: Response) => {
     //----> Get the order info from the request body.
-    const { cartItems, order } = req.body as OrderProduct;
+    const orderPayload = req.body as OrderPayload;
 
     //----> Store the new order info in the database.
-    const createdOrder = await orderDb.createOrder(cartItems, order);
+    const createdOrder = await orderDb.createOrder(orderPayload);
 
     //----> Send back the response.
     res.status(StatusCodes.CREATED).json(createdOrder);

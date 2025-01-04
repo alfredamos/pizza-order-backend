@@ -2,15 +2,18 @@ import { StatusCodes } from "http-status-codes";
 import prisma from "./prisma.db";
 import { CartItem, Order, Status } from "@prisma/client";
 import catchError from "http-errors";
+import { OrderPayload } from "../models/orderPayload.model";
+import { OrderModel } from "../models/order.model";
 
 export class OrderDb {
   constructor() {}
 
-  async createOrder(cartItems: CartItem[], order: Order) {
+  async createOrder(orderPayLoad: OrderPayload) {
+    const {cartItems, ...rest} = orderPayLoad;
     //----> Get the total quantity and total price into order.
     console.log("Before modifier");
     const modifiedOrder = this.adjustTotalPriceAndTotalQuantity(
-      order,
+      rest,
       cartItems
     );
     console.log("After modifier");
@@ -185,9 +188,9 @@ export class OrderDb {
   }
 
   private adjustTotalPriceAndTotalQuantity(
-    order: Order,
+    order: OrderModel,
     cartItems: CartItem[] = []
-  ): Order {
+  ): OrderModel {
     console.log({ order, cartItems });
     //----> Calculate both the total cost and total quantity.
     const totalQuantity = cartItems?.reduce(

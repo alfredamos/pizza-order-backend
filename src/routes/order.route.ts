@@ -54,43 +54,6 @@ router
    OrderController.orderDelivered
   );
 
-//orderId/delete-all/cart-items
-router
-  .route("/:orderId/delete-all/cart-items")
-  .delete(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
-   OrderController.deleteAllCartItemByOrderId
-  );
-
-//orderId/delete/cart-items/cartItemId
-router
-  .route("/:orderId/delete-one/cart-items/:cartItemId")
-  .delete(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
-   OrderController.deleteOneCartItemByOrderId
-  );
-
-//orderId/update-all/cart-items
-router
-  .route("/:orderId/update-all/cart-items")
-  .patch(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
-    orderValidationMiddleware,
-   OrderController.editAllCartItemsByOrderId
-  );
-
-//orderId/update/cart-items/cartItemId
-router
-  .route("/:orderId/update-one/cart-items/:cartItemId")
-  .patch(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
-    orderValidationMiddleware,
-   OrderController.editOneCartItemByOrderId
-  );
 
 router
   .route("/delete-all-orders-by-user-id/:userId")
