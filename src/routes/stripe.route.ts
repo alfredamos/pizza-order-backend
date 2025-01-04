@@ -4,7 +4,7 @@ import { authenticationMiddleware } from "../middleware/authentication.middlewar
 
 const router = express.Router();
 
-router.route("/stripe-payment/checkout")
+router.route("/checkout")
       .post(authenticationMiddleware,StripeController.paymentCheckout);
 
 export default router;

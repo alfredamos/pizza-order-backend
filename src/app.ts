@@ -12,6 +12,7 @@ import cartItemRoute from "./routes/cartItem.route";
 import orderRoute from "./routes/order.route";
 import pizzaRoute from "./routes/pizza.route";
 import userRoute from "./routes/user.route";
+import stripeRoute from "./routes/stripe.route"
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/api/cart-items", cartItemRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/pizzas", pizzaRoute);
 app.use("/api/users", userRoute);
+app.use("/api/stripe-payment", stripeRoute);
 
 app.all("*", notFoundRouteMiddleware);
 app.use(errorHandlerMiddleware);
