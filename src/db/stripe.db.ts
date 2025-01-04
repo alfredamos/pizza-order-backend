@@ -1,10 +1,13 @@
 import { CartItem } from "@prisma/client";
 import Stripe from "stripe";
+import { OrderPayload } from "../models/orderPayload.model";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export class StripeDb {
-  static async paymentCheckout(carts: CartItem[]) {
+  static async paymentCheckout(orderPayload: OrderPayload) {
+    //----> Destructure orderPayload.
+    const {cartItems: carts} = orderPayload;
     const session = await stripe.checkout.sessions.create({
       line_items: [
         ...carts?.map((cart) => ({
@@ -24,8 +27,7 @@ export class StripeDb {
       cancel_url: `${process.env.BASE_URL}/payment-failure`,
     });
 
-    const {id, url, status} = session
-  
+    const {id, url, status} = session;  
 
     return {id, url, status} 
   }
