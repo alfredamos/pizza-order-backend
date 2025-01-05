@@ -9,7 +9,7 @@ export class OrderDb {
   constructor() {}
 
   async createOrder(orderPayLoad: OrderPayload) {
-    const {cartItems, ...rest} = orderPayLoad;
+    const { cartItems, ...rest } = orderPayLoad;
     //----> Get the total quantity and total price into order.
     console.log("Before modifier");
     const modifiedOrder = this.adjustTotalPriceAndTotalQuantity(
@@ -24,7 +24,14 @@ export class OrderDb {
         ...modifiedOrder,
         orderDate: new Date(),
         cartItems: {
-          create: [...(cartItems as CartItem[])],
+          create: cartItems?.map((cart) => ({
+            ...cart,
+            pizza: {
+              create: {
+                id: cart.pizzaId,
+              },
+            },
+          })),
         },
       },
       include: {
@@ -33,6 +40,27 @@ export class OrderDb {
     });
 
     return createdOrder;
+  }
+
+  async orderCreate(orderPayload: OrderPayload) {
+    console.log({ orderPayload });
+
+    const { cartItems, ...rest } = orderPayload;
+
+    const createdOrder = await prisma.order.create({
+      data: {
+        ...rest,
+      },
+    });
+
+    const createdCartItems = await this.createCartItems(
+      cartItems,
+      createdOrder?.id
+    );
+
+    const payloadOfOrder: OrderPayload = {...createdOrder, cartItems: createdCartItems}
+
+    return payloadOfOrder;
   }
 
   async deleteOrderById(id: string) {
@@ -227,6 +255,22 @@ export class OrderDb {
       //----> Delete the order info from the database.
       await prisma.order.delete({ where: { id: order.id } });
     });
+  }
+
+  private createCartItems(cartItems: CartItem[], orderId: string) {
+    //----> Edit all cart-items at once.
+    const createdCarItems = cartItems.map(async (cart) => {
+      return await prisma.cartItem.create({
+        data: { ...cart, orderId },
+      });
+    });
+
+    //----> Collect all edited cart-items in Promise.all().
+    const updatedCartItems = Promise.all(createdCarItems);
+
+    //----> Return the updated cart-items.
+
+    return updatedCartItems;
   }
 }
 

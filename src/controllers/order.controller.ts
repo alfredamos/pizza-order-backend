@@ -18,6 +18,17 @@ export class OrderController {
     res.status(StatusCodes.CREATED).json(createdOrder);
   };
 
+  static orderCreate = async (req: Request, res: Response) => {
+    //----> Get the order info from the request body.
+    const orderPayload = req.body as OrderPayload;
+
+    //----> Store the new order info in the database.
+    const payloadOfOrder = await orderDb.orderCreate(orderPayload);
+
+    //----> Send back the response.
+    res.status(StatusCodes.CREATED).json(payloadOfOrder);
+  };
+
   static deleteOrderById = async (req: Request, res: Response) => {
     //----> Get the order id from params.
     const { id } = req.params;
