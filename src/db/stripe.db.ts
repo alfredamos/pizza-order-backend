@@ -1,4 +1,3 @@
-import { CartItem } from "@prisma/client";
 import Stripe from "stripe";
 import { OrderPayload } from "../models/orderPayload.model";
 
