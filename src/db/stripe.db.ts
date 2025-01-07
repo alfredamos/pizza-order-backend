@@ -28,7 +28,7 @@ export class StripeDb {
       cancel_url: `${process.env.BASE_URL}/payment-failure`,
     });
 
-    const { id, url, status } = session;
+    const { id, url, status, } = session;
 
     return { id, url, status };
   }
