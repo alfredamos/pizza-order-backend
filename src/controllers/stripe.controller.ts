@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { OrderPayload } from "../models/orderPayload.model";
-import { StripeDb } from "../db/stripe.db";
+import { stripeDb as StripeDb } from "../db/stripe.db";
 import { orderDb } from "../db/order.db";
 import { StatusCodes } from "http-status-codes";
 

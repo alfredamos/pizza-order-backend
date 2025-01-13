@@ -1,14 +1,19 @@
 import Stripe from "stripe";
 import { OrderPayload } from "../models/orderPayload.model";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
 export class StripeDb {
-  static async paymentCheckout(orderPayload: OrderPayload) {
+  stripe: Stripe;
+
+  constructor(){
+    //-----> Load stripe
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  }
+
+  async paymentCheckout(orderPayload: OrderPayload) {
     //----> Destructure orderPayload.
     const { cartItems } = orderPayload;
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await this.stripe.checkout.sessions.create({
       line_items: [
         ...cartItems?.map((cart) => ({
           price_data: {
@@ -32,4 +37,7 @@ export class StripeDb {
 
     return { id, url, status };
   }
+
 }
+
+export const stripeDb = new StripeDb();
