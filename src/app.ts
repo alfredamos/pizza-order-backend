@@ -1,7 +1,8 @@
-import express from "express";
+import express, {NextFunction, Request, Response} from "express";
 import "express-async-errors";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser"
 dotenv.config();
 
 import notFoundRouteMiddleware from "./middleware/notFoundRoute.middleware";
@@ -18,8 +19,26 @@ const app = express();
 
 const Port = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cookieParser());
+
+/* app.use((req: Request, res: Response, next: NextFunction) => {
+  const originalUrl = req.headers.origin
+  cors({
+    credentials: true,
+    origin: originalUrl,
+    methods: "GET, POST, PATCH, PUT, DELETE",
+  })
+  next()
+}) */
+
+app.use(cors({
+  credentials: true,
+  origin: ['http://localhost:4200', 'http://localhost:5173']
+})) 
+
+
 app.use(express.urlencoded({ extended: false }));
+
 app.use(express.json());
 
 app.use("/api/auth", authRoute);
@@ -27,7 +46,7 @@ app.use("/api/cart-items", cartItemRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/pizzas", pizzaRoute);
 app.use("/api/users", userRoute);
-app.use("/api/stripe-payment", stripeRoute);
+app.use("/api/stripe", stripeRoute);
 
 app.all("*", notFoundRouteMiddleware);
 app.use(errorHandlerMiddleware);

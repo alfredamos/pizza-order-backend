@@ -10,6 +10,8 @@ import * as jwt from "jsonwebtoken";
 import { Role, User } from "@prisma/client";
 import { AuthResponseModel } from "../models/authResponse.model";
 import { UserInfoModel } from "../models/userInfo.model";
+import { LoginResponse } from "../models/loginResponse.model";
+import { ResponseAuth } from "../models/CookieResponse";
 
 export class AuthDb {
   constructor() {}
@@ -91,16 +93,21 @@ export class AuthDb {
     //----> Get json web token.
     const token = this.getJsonToken(user.id, user.name, user.role);
 
-    const { password: userPassword, role, ...restOfData } = user;
+    const { password: userPassword, ...restOfData } = user;
 
-    const authResponse: AuthResponseModel = {
-      user: restOfData as User,
+    const authRes: ResponseAuth = {
+      id: user?.id,
+      name: user?.name,
+      image: user?.image,
       token,
+      role: user?.role,
       isLoggedIn: true,
       isAdmin: user?.role === Role.Admin,
     };
 
-    return authResponse;
+    const loginRes: LoginResponse = {authResponse: authRes, currentUser: user}
+    
+    return loginRes;
   }
 
   async signup(signupModel: SignupModel) {

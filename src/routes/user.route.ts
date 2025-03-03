@@ -1,8 +1,8 @@
 import express from "express";
 import { idCheckValidationMiddleware } from "../middleware/idCheckValidation.middleware";
 import { UserController } from "../controllers/user.controller";
-import { authenticationMiddleware } from '../middleware/authentication.middleware';
-import { authorizationMiddleware } from '../middleware/authorization.middleware';
+import { cookieAuthenticationMiddleware } from "../middleware/cookieAuthentication.middleware";
+import { cookieAdminMiddleware } from "../middleware/cookieAdmin.middleware";
 
 const router = express.Router();
 
@@ -10,18 +10,18 @@ router.param("id", idCheckValidationMiddleware);
 
 router
   .route("/")
-  .get(authenticationMiddleware, authorizationMiddleware('Admin'), UserController.getAllUsers)
+  .get(cookieAuthenticationMiddleware, cookieAdminMiddleware, UserController.getAllUsers)
   
 router
   .route("/:id")
   .delete(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
+    cookieAuthenticationMiddleware,
+    cookieAdminMiddleware,
     UserController.deleteUserById
   )
   .get(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
+    cookieAuthenticationMiddleware,
+    cookieAdminMiddleware,
     UserController.getUserById
   );
  

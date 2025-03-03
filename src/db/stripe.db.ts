@@ -9,7 +9,7 @@ export class StripeDb {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   }
 
-  async paymentCheckout(orderPayload: OrderPayload) {
+  async paymentCheckout(orderPayload: OrderPayload, origin: string) {
     //----> Destructure orderPayload.
     const { cartItems } = orderPayload;
 
@@ -29,8 +29,10 @@ export class StripeDb {
       ],
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: `${process.env.BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.BASE_URL}/payment-failure`,
+      success_url: `${origin}/orders/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/orders/payment-failure`, 
+      /* success_url: `${process.env.BASE_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.BASE_URL}/payment-failure`, */
     });
 
     const { id, url, status, } = session;

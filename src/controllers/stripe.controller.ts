@@ -8,7 +8,9 @@ export class StripeController {
   static paymentCheckout = async (req: Request, res: Response) => {
     const orderPayload = req.body as OrderPayload; //----> Get the request payload.
 
-    const sessionPayload = await StripeDb.paymentCheckout(orderPayload);
+   const origin = req.headers.origin
+
+    const sessionPayload = await StripeDb.paymentCheckout(orderPayload, origin);
 
     //-----> If there's sessionPayload, then store the order in the database.
     if (sessionPayload?.id) {

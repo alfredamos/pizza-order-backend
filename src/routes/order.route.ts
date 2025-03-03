@@ -1,5 +1,5 @@
-import { authenticationMiddleware } from '../middleware/authentication.middleware';
-import { authorizationMiddleware } from '../middleware/authorization.middleware';
+import { cookieAdminMiddleware } from '../middleware/cookieAdmin.middleware';
+import { cookieAuthenticationMiddleware } from '../middleware/cookieAuthentication.middleware';
 import { idCheckValidationMiddleware } from '../middleware/idCheckValidation.middleware';
 import { orderValidationMiddleware } from '../middleware/orderValidation.middleware';
 import { OrderController } from './../controllers/order.controller';
@@ -13,50 +13,50 @@ router.param("id", idCheckValidationMiddleware);
 router
   .route("/")
   .get(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
+    cookieAuthenticationMiddleware,
+    cookieAdminMiddleware,
    OrderController.getAllOrders
   )
   .post(
-    authenticationMiddleware,
+    cookieAuthenticationMiddleware,
     orderValidationMiddleware,
    OrderController.createOrder
   );
 
 router
   .route("/:id")
-  .delete(authenticationMiddleware,OrderController.deleteOrderById)
-  .get(authenticationMiddleware,OrderController.getOrderById)
+  .delete(cookieAuthenticationMiddleware,OrderController.deleteOrderById)
+  .get(cookieAuthenticationMiddleware,OrderController.getOrderById)
   .patch(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
+    cookieAuthenticationMiddleware,
+    cookieAdminMiddleware,
     orderValidationMiddleware,
    OrderController.editOrderById
   );
 
 router
   .route("/orders-by-user-id/:userId")
-  .get(authenticationMiddleware,OrderController.getAllOrdersByUserId);
+  .get(cookieAuthenticationMiddleware,OrderController.getAllOrdersByUserId);
 
 router
   .route("/shipped/:orderId")
   .patch(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
+    cookieAuthenticationMiddleware,
+    cookieAdminMiddleware,
    OrderController.orderShipped
   );
 
 router
   .route("/delivered/:orderId")
   .patch(
-    authenticationMiddleware,
-    authorizationMiddleware("Admin"),
+    cookieAuthenticationMiddleware,
+    cookieAdminMiddleware,
    OrderController.orderDelivered
   );
 
 
 router
   .route("/delete-all-orders-by-user-id/:userId")
-  .delete(authenticationMiddleware,OrderController.deleteOrdersByUserId);
+  .delete(cookieAuthenticationMiddleware,OrderController.deleteOrdersByUserId);
 
 export default router;

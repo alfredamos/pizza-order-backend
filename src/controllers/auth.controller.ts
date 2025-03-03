@@ -8,6 +8,7 @@ import { SignupModel } from "../models/signup.model";
 import { AuthUserModel } from "../models/authUser.model";
 import { UserInfoModel } from "../models/userInfo.model";
 import { UserRoleChangeModel } from "../models/userRoleChange.model";
+import { initialUserCredential } from "../db/initialUserCredentials";
 
 export class AuthController {
   static changePassword = async (req: Request, res: Response) => {
@@ -38,10 +39,28 @@ export class AuthController {
 
     //----> Login the user and get json web token.
     const userCredentials = await authDb.login(loginCredentials);
-
+    
+    //----> Get the authRes from userCredentials..
+    const authRes = userCredentials.authResponse;
+    //----> Stringified the authRes.
+    const authResStringified = JSON.stringify(authRes);
+    //----> Set the auth cookie.
+    res.cookie('auth', authResStringified, {
+      httpOnly: true
+    });
     //----> Send back the response.
     res.status(StatusCodes.OK).json(userCredentials);
   };
+
+  static logout = async (req: Request, res: Response) => {
+    //-----> Clear the cookie.
+    res.clearCookie("auth", {
+      httpOnly: true
+    })
+    console.log("I have logout!!!")
+    //----> Return the default value of user-credentials.
+    res.status(StatusCodes.OK).json(initialUserCredential);
+  }
 
   static signup = async (req: Request, res: Response) => {
     //----> Get the user credentials from the request.
